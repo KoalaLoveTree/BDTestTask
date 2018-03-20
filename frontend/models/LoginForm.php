@@ -1,7 +1,7 @@
 <?php
-namespace common\models;
+namespace frontend\models;
 
-use backend\models\Admin;
+use common\models\User;
 use Yii;
 use yii\base\Model;
 
@@ -76,12 +76,5 @@ class LoginForm extends Model
         }
 
         return $this->_user;
-    }
-
-    protected function isAdmin()
-    {
-        if ($this->getUser()->role===Admin::ROLE){
-        }
-        return ;
     }
 }

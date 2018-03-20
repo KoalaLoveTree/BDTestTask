@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "630d5f1d19e73b0163f900453171fba5",
+    "content-hash": "daa6cec7ee6a234d05d156d9bc2cbc9b",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -62,6 +62,25 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/jquery/jquery-dist/zipball/77d2a51d0520d2ee44173afdf4e40a9201f5964e",
                 "reference": "77d2a51d0520d2ee44173afdf4e40a9201f5964e",
+                "shasum": null
+            },
+            "type": "bower-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "bower-asset/jquery-infinite-scroll",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:paulirish/infinite-scroll.git",
+                "reference": "f0d9eecb55a428b2fd4027964a22b84633ba6e3e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/paulirish/infinite-scroll/zipball/f0d9eecb55a428b2fd4027964a22b84633ba6e3e",
+                "reference": "f0d9eecb55a428b2fd4027964a22b84633ba6e3e",
                 "shasum": null
             },
             "type": "bower-asset",
@@ -324,6 +343,55 @@
                 "html"
             ],
             "time": "2018-02-23T01:58:20+00:00"
+        },
+        {
+            "name": "nirvana-msu/yii2-infinite-scroll",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nirvana-msu/yii2-infinite-scroll.git",
+                "reference": "ee78b2f2abb1a2c18248867733ddc37eee68392c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nirvana-msu/yii2-infinite-scroll/zipball/ee78b2f2abb1a2c18248867733ddc37eee68392c",
+                "reference": "ee78b2f2abb1a2c18248867733ddc37eee68392c",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/jquery-infinite-scroll": "2.*",
+                "yiisoft/yii2": "*"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "nirvana\\infinitescroll\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alexander Stepanov",
+                    "email": "student_vmk@mail.ru"
+                }
+            ],
+            "description": "Yii2 extension for infinite-scroll jQuery plugin",
+            "keywords": [
+                "infinite-scroll",
+                "jquery",
+                "plugin",
+                "widget",
+                "yii2"
+            ],
+            "time": "2017-07-17T20:37:34+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -3191,7 +3259,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "nirvana-msu/yii2-infinite-scroll": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

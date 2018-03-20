@@ -1,11 +1,13 @@
 <?php
 namespace backend\controllers;
 
-use common\models\LoginForm;
+use backend\models\LoginForm;
 use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\web\Response;
+use yii\web\UnauthorizedHttpException;
 
 /**
  * Site controller

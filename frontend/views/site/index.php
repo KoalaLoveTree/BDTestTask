@@ -2,52 +2,49 @@
 
 /* @var $this yii\web\View */
 
-$this->title = 'Test Task';
+use common\models\User;
+use frontend\models\Client;
+use frontend\models\DefaultUser;
+use frontend\models\Vendor;
+use yii\helpers\Html;
+
+$role = User::userRole();
+$this->title = 'Vendors';
 ?>
 <div class="site-index">
 
-    <div class="jumbotron">
-        <h1>Congratulations!</h1>
 
-        <p class="lead">You have successfully created your Yii-powered application.</p>
+    <?php if ($role === DefaultUser::ROLE): ?>
+        <div class="jumbotron">
+            <h1>Congratulations!</h1>
 
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
-    </div>
-
-    <div class="body-content">
-
-        <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
+            <p class="lead">You have successfully created your account, now tap the button below to configure u'r
+                profile as vendor or client.</p>
+            <div>
+                <?= Html::a('Configure', ['/user/configure-profile'], ['class' => 'btn btn-lg btn-success']) ?>
             </div>
         </div>
+    <?php endif; ?>
 
-    </div>
+    <?php if ($role === Vendor::ROLE): ?>
+        <div class="jumbotron">
+            <h1>Hello!</h1>
+
+            <p class="lead">Clients all over the world are waiting for you.</p>
+            <div>
+                <?= Html::a('My Services', ['/service/my-services'], ['class' => 'btn btn-lg btn-success']) ?>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($role === Client::ROLE): ?>
+        <div class="jumbotron">
+            <h1>Hello!</h1>
+
+            <p class="lead">Vendors around the world offer you their services.</p>
+            <div>
+                <?= Html::a('Services', ['/service/exist-services'], ['class' => 'btn btn-lg btn-success']) ?>
+            </div>
+        </div>
+    <?php endif; ?>
 </div>

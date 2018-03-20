@@ -87,6 +87,27 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * @param int $id
+     * @return string
+     */
+    protected static function findCurrentUserRole(int $id)
+    {
+        return static::findOne(['id' => $id])->role;
+    }
+
+    /**
+     * @return string
+     */
+    public static function userRole()
+    {
+        if (Yii::$app->user->isGuest){
+             return 'guest';
+        }else{
+            return self::findCurrentUserRole(Yii::$app->user->getId());
+        }
+    }
+
+    /**
      * Finds user by password reset token
      *
      * @param string $token password reset token

@@ -3,6 +3,10 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use common\models\User;
+use frontend\models\Client;
+use frontend\models\DefaultUser;
+use frontend\models\Vendor;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
@@ -10,6 +14,7 @@ use yii\widgets\Breadcrumbs;
 use frontend\assets\AppAsset;
 use common\widgets\Alert;
 
+$role = User::userRole();
 AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -35,19 +40,23 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
-        ['label' => 'About', 'url' => ['/site/about']],
-        ['label' => 'Contact', 'url' => ['/site/contact']],
-    ];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
+        if ($role!== DefaultUser::ROLE) {
+            $menuItems[] = ['label' => 'My Orders', 'url' => ['/order/orders']];
+        }
+        if ($role=== Client::ROLE){
+            $menuItems[] = ['label' => 'Services', 'url' => ['/service/exist-services']];
+        }
+        if ($role=== Vendor::ROLE){
+            $menuItems[] = ['label' => 'My Services', 'url' => ['/service/my-services']];
+        }
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->getId() . ')',
+                'Logout',
                 ['class' => 'btn btn-link logout']
             )
             . Html::endForm()
@@ -73,7 +82,7 @@ AppAsset::register($this);
     <div class="container">
         <p class="pull-left">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
 
-        <p class="pull-right"><?= Yii::powered() ?></p>
+        <p class="pull-right"><?=Yii::created()?></p>
     </div>
 </footer>
 
