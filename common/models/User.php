@@ -2,6 +2,8 @@
 
 namespace common\models;
 
+use frontend\models\Client;
+use frontend\models\DefaultUser;
 use Yii;
 use yii\base\Exception;
 use yii\base\NotSupportedException;
@@ -27,6 +29,7 @@ use yii\web\IdentityInterface;
 class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
+    const STATUS_MODERATED = 5;
     const STATUS_ACTIVE = 10;
 
 
@@ -55,7 +58,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED, self::STATUS_MODERATED]],
         ];
     }
 
@@ -64,7 +67,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
+        return static::find()->andWhere(['id' => $id])->andWhere(['<>', 'status', self::STATUS_DELETED])->one();
     }
 
     /**
@@ -79,11 +82,52 @@ class User extends ActiveRecord implements IdentityInterface
      * Finds user by email
      *
      * @param string $email
-     * @return static|null
+     * @return array|null|ActiveRecord
      */
     public static function findByEmail(string $email)
     {
-        return static::findOne(['email' => $email, 'status' => self::STATUS_ACTIVE]);
+        return static::find()->andWhere(['email' => $email])->andWhere(['<>', 'status', self::STATUS_DELETED])->one();
+    }
+
+    /**
+     * Finds user by email
+     *
+     * @param int $id
+     * @return array|null|Vendor
+     */
+    public static function findById(int $id)
+    {
+        return static::find()->andWhere(['id' => $id])->andWhere(['<>', 'status', self::STATUS_DELETED])->one();
+    }
+
+    public static function isClient()
+    {
+        $client = new Client();
+        if ($client->find()->where(['id' => Yii::$app->user->getId()])->one() !== null) {
+//        if ($client->role === Client::ROLE){
+            return true;
+        }
+        return false;
+    }
+
+    public static function isDefaultUser()
+    {
+        $user = new DefaultUser();
+        if ($user->find()->where(['id' => Yii::$app->user->getId()])->one() !== null) {
+//        if ($user->role === DefaultUser::ROLE){
+            return true;
+        }
+        return false;
+    }
+
+    public static function isVendor()
+    {
+        $vendor = new Vendor();
+        if ($vendor->find()->where(['id' => Yii::$app->user->getId()])->one() !== null) {
+//        if ($vendor->role === Vendor::ROLE){
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -95,15 +139,62 @@ class User extends ActiveRecord implements IdentityInterface
         return static::findOne(['id' => $id])->role;
     }
 
+    protected static function findCurrentUserStatus(int $id)
+    {
+        return static::findOne(['id' => $id])->status;
+    }
+
+    public static function updateUserRoleClient(string $city, string $state): bool
+    {
+        $user = static::findOne(['id' => Yii::$app->user->getId()]);
+        $user->role = Client::ROLE;
+        if ($user->update() !== false) {
+            $client = Client::findOne(['id' => Yii::$app->user->getId()]);
+            $client->city = $city;
+            $client->state = $state;
+            if ($client->update() !== false) {
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+
+    public static function updateUserRoleVendor(int $sphereId): bool
+    {
+        $user = static::findOne(['id' => Yii::$app->user->getId()]);
+        $user->status = self::STATUS_MODERATED;
+        $user->role = Vendor::ROLE;
+        if ($user->update() !== false) {
+            $vendor = Vendor::findOne(['id' => Yii::$app->user->getId()]);
+            $vendor->sphere_id = $sphereId;
+            if ($vendor->update() !== false) {
+                return true;
+            }
+        }
+        return false;
+
+    }
+
     /**
      * @return string
      */
     public static function userRole()
     {
-        if (Yii::$app->user->isGuest){
-             return 'guest';
-        }else{
+        if (Yii::$app->user->isGuest) {
+            return 'guest';
+        } else {
             return self::findCurrentUserRole(Yii::$app->user->getId());
+        }
+    }
+
+    public static function userStatus()
+    {
+        if (Yii::$app->user->isGuest) {
+            return 'guest';
+        } else {
+            return self::findCurrentUserStatus(Yii::$app->user->getId());
         }
     }
 

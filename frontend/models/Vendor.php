@@ -4,35 +4,12 @@
 namespace frontend\models;
 
 
-use common\models\User;
-
-/**
- * Class Vendor
- *
- * @property integer $sphere_id
- * @property integer $level
- */
-
-class Vendor extends User
+class Vendor extends \common\models\Vendor
 {
 
-    const ROLE = 'vendor';
 
-    public function init()
+    public function getServices()
     {
-        $this->role = self::ROLE;
-        parent::init();
+        return $this->hasMany(Service::className(), ['vendor_id' => 'id']);
     }
-
-    public static function find()
-    {
-        return new UserQuery(get_called_class(), ['type' => self::ROLE, 'tableName' => self::tableName()]);
-    }
-
-    public function beforeSave($insert)
-    {
-        $this->role = self::ROLE;
-        return parent::beforeSave($insert);
-    }
-
 }

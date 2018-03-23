@@ -1,10 +1,10 @@
 <?php
+
 namespace backend\models;
 
 use common\models\User;
 use Yii;
 use yii\base\Model;
-use yii\web\UnauthorizedHttpException;
 
 /**
  * Login form
@@ -59,21 +59,21 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
-            return self::isAdmin()&&Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+            return self::isAdmin() && Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
         }
 
         return false;
     }
 
     /**
-     * Finds user by [[username]]
+     * Finds user by [[email]]
      *
-     * @return User|null
+     * @return User|null|array
      */
     protected function getUser()
     {
         if ($this->_user === null) {
-            $this->_user = User::findByEmail($this->email);
+            $this->_user = Admin::findByEmail($this->email);
         }
 
         return $this->_user;

@@ -1,16 +1,30 @@
 <?php
 
 
-namespace frontend\models;
+namespace common\models;
 
 
 use common\models\User;
 use common\models\UserQuery;
 
-class DefaultUser extends User
+/**
+ * Class Vendor
+ *
+ * @property integer $sphere_id
+ * @property integer $level
+ */
+
+class Vendor extends User
 {
 
-    const ROLE = 'default user';
+    const ROLE = 'vendor';
+
+    const MINIMUM_VENDOR_PRICE = 15;
+
+    public function getSphere()
+    {
+        return $this->hasOne(Sphere::className(),['id' => 'sphere_id']);
+    }
 
     public function init()
     {

@@ -18,9 +18,14 @@ class Admin extends User
         parent::init();
     }
 
+    public static function findByEmail(string $email)
+    {
+        return static::find()->where(['email' => $email])->one();
+    }
+
     public static function find()
     {
-        return new UserQuery(get_called_class(), ['type' => self::ROLE, 'tableName' => self::tableName()]);
+        return new UserQuery(get_called_class(), ['role' => self::ROLE, 'tableName' => self::tableName()]);
     }
 
     public function beforeSave($insert)

@@ -5,6 +5,7 @@ namespace frontend\models;
 
 
 use common\models\User;
+use common\models\UserQuery;
 
 /**
  * Class Client
@@ -25,7 +26,7 @@ class Client extends User
 
     public static function find()
     {
-        return new UserQuery(get_called_class(), ['type' => self::ROLE, 'tableName' => self::tableName()]);
+        return new UserQuery(get_called_class(), ['role' => self::ROLE, 'tableName' => self::tableName()]);
     }
 
     public function beforeSave($insert)

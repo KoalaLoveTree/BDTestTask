@@ -1,6 +1,7 @@
 <?php
 
 /* @var $this \yii\web\View */
+
 /* @var $content string */
 
 use common\models\User;
@@ -44,13 +45,16 @@ AppAsset::register($this);
         $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
-        if ($role!== DefaultUser::ROLE) {
-            $menuItems[] = ['label' => 'My Orders', 'url' => ['/order/orders']];
+        if (!User::isDefaultUser()) {
+            $menuItems[] = ['label' => 'My Orders', 'url' => ['/order/my-orders']];
+            if (User::isVendor()) {
+                $menuItems[] = ['label' => 'Orders For Confirm', 'url' => ['/order/orders-for-confirm']];
+            }
         }
-        if ($role=== Client::ROLE){
+        if ($role === Client::ROLE) {
             $menuItems[] = ['label' => 'Services', 'url' => ['/service/exist-services']];
         }
-        if ($role=== Vendor::ROLE){
+        if ($role === Vendor::ROLE) {
             $menuItems[] = ['label' => 'My Services', 'url' => ['/service/my-services']];
         }
         $menuItems[] = '<li>'
@@ -82,7 +86,7 @@ AppAsset::register($this);
     <div class="container">
         <p class="pull-left">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
 
-        <p class="pull-right"><?=Yii::created()?></p>
+        <p class="pull-right"><?= Yii::created() ?></p>
     </div>
 </footer>
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace frontend\models;
 
 use yii\base\Model;
@@ -53,7 +54,7 @@ class SignupForm extends Model
         if (!$this->validate()) {
             return null;
         }
-        
+
         $user = new User();
         $user->email = $this->email;
         $user->setPassword($this->password);
@@ -61,7 +62,7 @@ class SignupForm extends Model
         $user->last_name = $this->last_name;
         $user->role = DefaultUser::ROLE;
         $user->generateAuthKey();
-        
+
         return $user->save() ? $user : null;
     }
 }

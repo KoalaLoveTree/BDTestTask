@@ -5,12 +5,20 @@ namespace frontend\controllers;
 
 
 use frontend\models\Service;
+use frontend\models\CreateNewServiceForm;
+use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 
 class ServiceController extends Controller
 {
-
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return [];
+    }
     /**
      * {@inheritdoc}
      */
@@ -29,20 +37,41 @@ class ServiceController extends Controller
 
     public function actionMyServices()
     {
-        return $this->render('services',[
+        return $this->render('services', [
             'services' => new ActiveDataProvider([
-                'query' => Service::find()->where(['vendor_id'=>\Yii::$app->user->getId()])
+                'query' => Service::find()->where(['vendor_id' => \Yii::$app->user->getId()])
                     ->orderBy('title')
             ]),
         ]);
     }
 
-    public function actionExistServices(){
-        return $this->render('services',[
+    public function actionExistServices()
+    {
+        return $this->render('services', [
             'services' => new ActiveDataProvider([
-                'query' => Service::find()->where(['status'=>10])
+                'query' => Service::find()->where(['status' => 10])
                     ->orderBy('title')
             ]),
         ]);
     }
+
+    public function actionCreateNewService()
+    {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+        $model = new CreateNewServiceForm();
+        if ($model->load(Yii::$app->request->post()) && $model->createNewService()) {
+            return $this->redirect(['/service/my-services']);
+        } else {
+            $model->description = '';
+            $model->price = '';
+            $model->title = '';
+
+            return $this->render('createNewService', [
+                'model' => $model,
+            ]);
+        }
+    }
+
 }

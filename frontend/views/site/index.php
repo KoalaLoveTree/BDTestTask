@@ -14,15 +14,23 @@ $this->title = 'Vendors';
 <div class="site-index">
 
 
+    <?php if (Yii::$app->user->isGuest): ?>
+
+        <div class="jumbotron">
+            <?= Html::a('Sign Up', ['/site/signup'], ['class' => 'btn btn-lg btn-success']) ?>
+            or
+            <?= Html::a('Login', ['/site/login'], ['class' => 'btn btn-lg btn-success']) ?>
+            for start using our site.
+        </div>
+
+    <?php endif; ?>
     <?php if ($role === DefaultUser::ROLE): ?>
         <div class="jumbotron">
             <h1>Congratulations!</h1>
 
             <p class="lead">You have successfully created your account, now tap the button below to configure u'r
-                profile as vendor or client.</p>
-            <div>
-                <?= Html::a('Configure', ['/user/configure-profile'], ['class' => 'btn btn-lg btn-success']) ?>
-            </div>
+                profile as <a href="/user/configure-new-vendor">vendor</a> or <a href="/user/configure-new-client">client</a>.
+            </p>
         </div>
     <?php endif; ?>
 
