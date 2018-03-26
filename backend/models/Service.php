@@ -11,7 +11,14 @@ class Service extends \common\models\Service
         return static::find()->where(['status' => self::STATUS_MODERATION]);
     }
 
-    public static function confirmService(int $id)
+    /**
+     * @param int $id
+     * @return bool
+     * @throws \Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public static function confirmService(int $id): bool
     {
         $service = static::findOne(['id' => $id]);
         $service->status = self::STATUS_APPROVE;
@@ -22,7 +29,14 @@ class Service extends \common\models\Service
         return false;
     }
 
-    public static function banService(int $id)
+    /**
+     * @param int $id
+     * @return bool
+     * @throws \Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public static function banService(int $id): bool
     {
         $service = static::findOne(['id' => $id]);
         $service->status = self::STATUS_DELETED;

@@ -19,12 +19,27 @@ class ConfirmVendorForm extends Model
     {
         return [
             ['level', 'required'],
+            ['level', 'number'],
         ];
     }
 
-    public function confirmVendorLevel(int $id)
+    /**
+     * @param int $id
+     * @return bool
+     * @throws \Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function confirmVendorLevel(int $id): bool
     {
-        return Vendor::confirmVendor($id, $this->level);
+        $vendor = Vendor::findOne(['id' => $id]);
+        $vendor->level = $this->level;
+        $vendor->status = Vendor::STATUS_ACTIVE;
+        if ($vendor->update() !== false) {
+            return true;
+        }
+
+        return false;
     }
 
 }

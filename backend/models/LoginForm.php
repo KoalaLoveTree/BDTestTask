@@ -56,7 +56,7 @@ class LoginForm extends Model
      *
      * @return bool whether the user is logged in successfully
      */
-    public function login()
+    public function login(): bool
     {
         if ($this->validate()) {
             return self::isAdmin() && Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
@@ -70,7 +70,7 @@ class LoginForm extends Model
      *
      * @return User|null|array
      */
-    protected function getUser()
+    protected function getUser(): ?User
     {
         if ($this->_user === null) {
             $this->_user = Admin::findByEmail($this->email);
@@ -82,7 +82,7 @@ class LoginForm extends Model
     /**
      * @return bool
      */
-    protected function isAdmin()
+    protected function isAdmin(): bool
     {
         return $this->getUser()->role === Admin::ROLE;
     }

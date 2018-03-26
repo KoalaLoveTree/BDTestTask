@@ -4,27 +4,27 @@
 namespace backend\models;
 
 
+use common\models\UserQuery;
+
 class Vendor extends \common\models\Vendor
 {
 
-    public static function getVendorsForModeration()
+    /**
+     * @return \common\models\UserQuery
+     */
+    public static function getVendorsForModeration(): UserQuery
     {
         return static::find()->where(['status' => self::STATUS_MODERATED]);
     }
 
-    public static function confirmVendor(int $id, int $level)
-    {
-        $vendor = static::findOne(['id' => $id]);
-        $vendor->level = $level;
-        $vendor->status = self::STATUS_ACTIVE;
-        if ($vendor->update() !== false) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public static function banVendor(int $id)
+    /**
+     * @param int $id
+     * @return bool
+     * @throws \Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public static function banVendor(int $id): bool
     {
         $vendor = static::findOne(['id' => $id]);
         $vendor->status = self::STATUS_DELETED;

@@ -6,6 +6,7 @@ namespace backend\models;
 
 use common\models\User;
 use common\models\UserQuery;
+use yii\db\ActiveQuery;
 
 class Admin extends User
 {
@@ -18,12 +19,19 @@ class Admin extends User
         parent::init();
     }
 
-    public static function findByEmail(string $email)
+    /**
+     * @param string $email
+     * @return User|null|array
+     */
+    public static function findByEmail(string $email):?User
     {
         return static::find()->where(['email' => $email])->one();
     }
 
-    public static function find()
+    /**
+     * @return UserQuery
+     */
+    public static function find():UserQuery
     {
         return new UserQuery(get_called_class(), ['role' => self::ROLE, 'tableName' => self::tableName()]);
     }
