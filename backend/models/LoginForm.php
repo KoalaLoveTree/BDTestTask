@@ -59,7 +59,7 @@ class LoginForm extends Model
     public function login(): bool
     {
         if ($this->validate()) {
-            return self::isAdmin() && Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
         }
 
         return false;
@@ -79,11 +79,4 @@ class LoginForm extends Model
         return $this->_user;
     }
 
-    /**
-     * @return bool
-     */
-    protected function isAdmin(): bool
-    {
-        return $this->getUser()->role === Admin::ROLE;
-    }
 }

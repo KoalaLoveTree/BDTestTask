@@ -4,20 +4,53 @@
 namespace frontend\controllers;
 
 
+use common\models\User;
 use frontend\models\Service;
 use frontend\models\CreateNewServiceForm;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 
 class ServiceController extends Controller
 {
+
     /**
      * {@inheritdoc}
      */
     public function behaviors()
     {
-        return [];
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['exist-services', 'my-services', 'create-new-service'],
+                'rules' => [
+                    [
+                        'actions' => ['exist-services'],
+                        'allow' => true,
+                        'matchCallback' => function ($rule, $action) {
+                            return User::isClient();
+                        }
+                    ],
+                    [
+                        'actions' => ['my-services', 'create-new-service'],
+                        'allow' => true,
+                        'matchCallback' => function ($rule, $action) {
+                            return User::isVendor();
+                        }
+                    ]
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'my-services' => ['get'],
+                    'create-new-service' => ['post'],
+                    'exist-services' => ['get'],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -58,9 +91,6 @@ class ServiceController extends Controller
 
     public function actionCreateNewService()
     {
-        if (Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
         $model = new CreateNewServiceForm();
         if ($model->load(Yii::$app->request->post()) && $model->createNewService()) {
             return $this->redirect(['/service/my-services']);

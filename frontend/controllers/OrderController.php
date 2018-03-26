@@ -11,6 +11,8 @@ use frontend\models\CreateNewTimeOrderForm;
 use frontend\models\Service;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 
 class OrderController extends Controller
@@ -21,7 +23,37 @@ class OrderController extends Controller
      */
     public function behaviors()
     {
-        return [];
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['my-orders', 'ban-order', 'confirm-order', 'orders-for-confirm'],
+                'rules' => [
+                    [
+                        'actions' => ['my-orders'],
+                        'allow' => true,
+                        'matchCallback' => function ($rule, $action) {
+                            return User::isClient() || User::isVendor();
+                        }
+                    ],
+                    [
+                        'actions' => ['ban-order', 'confirm-order', 'orders-for-confirm'],
+                        'allow' => true,
+                        'matchCallback' => function ($rule, $action) {
+                            return User::isVendor();
+                        }
+                    ]
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'my-orders' => ['get'],
+                    'ban-order' => ['put'],
+                    'confirm-order' => ['put'],
+                    'orders-for-confirm' => ['get'],
+                ],
+            ],
+        ];
     }
 
     /**

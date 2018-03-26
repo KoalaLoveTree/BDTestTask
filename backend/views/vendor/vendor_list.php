@@ -17,10 +17,7 @@ use yii\helpers\HtmlPurifier;
 </div>
 <div class="container-fluid">
 
-    <div class="form-group">
-        <?= Html::a('Confirm', ['/vendor/confirm-vendor?id = ' . $model->id], ['class' => 'btn btn-block btn-success']) ?>
-    </div>
-
+    <?= Html::a('Confirm', ['/vendor/confirm-vendor?id = ' . $model->id], ['class' => 'btn btn-block btn-success']) ?>
 
     <?= Html::a('Ban', ['/vendor/ban-vendor?id = ' . $model->id], ['class' => 'btn btn-block btn-success']) ?>
 </div>

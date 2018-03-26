@@ -7,6 +7,8 @@ use common\models\User;
 use frontend\models\ConfigureClientForm;
 use frontend\models\ConfigureVendorForm;
 use Yii;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 
 class UserController extends Controller
@@ -17,7 +19,28 @@ class UserController extends Controller
      */
     public function behaviors()
     {
-        return [];
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['configure-new-vendor','configure-new-client'],
+                'rules' => [
+                    [
+                        'actions' => ['configure-new-vendor','configure-new-client'],
+                        'allow' => true,
+                        'matchCallback' => function ($rule, $action) {
+                            return User::isDefaultUser();
+                        }
+                    ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'configure-new-vendor' => ['put'],
+                    'configure-new-client' => ['put'],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -38,9 +61,6 @@ class UserController extends Controller
 
     public function actionConfigureNewVendor()
     {
-        if (Yii::$app->user->isGuest || !User::isDefaultUser()) {
-            return $this->goHome();
-        }
         $model = new ConfigureVendorForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->configureProfileAsVendor()) {
             return $this->redirect(['/']);
@@ -59,9 +79,6 @@ class UserController extends Controller
 
     public function actionConfigureNewClient()
     {
-        if (Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
         $model = new ConfigureClientForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->configureProfileAsClient()) {
             return $this->goHome();

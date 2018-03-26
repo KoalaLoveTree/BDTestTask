@@ -4,7 +4,10 @@
 namespace frontend\controllers;
 
 
+use common\models\User;
 use frontend\models\Vendor;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 
 class VendorController extends Controller
@@ -14,7 +17,27 @@ class VendorController extends Controller
      */
     public function behaviors()
     {
-        return [];
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['vendor-page'],
+                'rules' => [
+                    [
+                        'actions' => ['vendor-page'],
+                        'allow' => true,
+                        'matchCallback' => function ($rule, $action) {
+                            return User::isClient();
+                        }
+                    ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'vendor-page' => ['get'],
+                ],
+            ],
+        ];
     }
 
     /**

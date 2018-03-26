@@ -24,7 +24,7 @@ class ServiceController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['error'],
+                        'actions' => [ 'error'],
                         'allow' => true,
                     ],
                     [

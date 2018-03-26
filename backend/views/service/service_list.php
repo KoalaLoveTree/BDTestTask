@@ -15,7 +15,7 @@ use yii\helpers\HtmlPurifier;
 
     <h2><?= Html::encode($model->title) ?></h2>
     Description: <?= HtmlPurifier::process($model->description) ?><br>
-    Price: <?= HtmlPurifier::process($model->price) ?>$<br>
+    Price: <?= HtmlPurifier::process($model->getPrice()) ?>$<br>
 
 </div>
 <div class="container-fluid">
