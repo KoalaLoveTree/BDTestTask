@@ -7,6 +7,8 @@ namespace backend\controllers;
 use backend\models\Service;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 
 class ServiceController extends Controller
@@ -17,7 +19,22 @@ class ServiceController extends Controller
      */
     public function behaviors()
     {
-        return [];
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['error'],
+                        'allow' => true,
+                    ],
+                    [
+                        'actions' => ['for-confirm', 'logout', 'index', 'confirm-service', 'ban-service'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+        ];
     }
 
     /**

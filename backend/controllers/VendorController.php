@@ -8,6 +8,7 @@ use backend\models\ConfirmVendorForm;
 use backend\models\Vendor;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 
 class VendorController extends Controller
@@ -18,7 +19,22 @@ class VendorController extends Controller
      */
     public function behaviors()
     {
-        return [];
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['error'],
+                        'allow' => true,
+                    ],
+                    [
+                        'actions' => ['for-confirm', 'logout', 'index', 'confirm-vendor', 'ban-vendor'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+        ];
     }
 
     /**

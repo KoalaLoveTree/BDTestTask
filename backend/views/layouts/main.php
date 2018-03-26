@@ -36,13 +36,13 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    $menuItems = [
-        ['label' => 'Services', 'url' => ['/service/for-confirm']],
-        ['label' => 'Vendors', 'url' => ['/vendor/for-confirm']],
-    ];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
+        $menuItems = [
+            ['label' => 'Services', 'url' => ['/service/for-confirm']],
+            ['label' => 'Vendors', 'url' => ['/vendor/for-confirm']],
+        ];
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
