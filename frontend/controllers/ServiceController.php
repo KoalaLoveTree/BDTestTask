@@ -46,7 +46,7 @@ class ServiceController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'my-services' => ['get'],
-                    'create-new-service' => ['post'],
+                    'create-new-service' => ['post','get'],
                     'exist-services' => ['get'],
                 ],
             ],

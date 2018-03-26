@@ -36,8 +36,8 @@ class UserController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'configure-new-vendor' => ['put'],
-                    'configure-new-client' => ['put'],
+                    'configure-new-vendor' => ['put','get'],
+                    'configure-new-client' => ['put','get'],
                 ],
             ],
         ];

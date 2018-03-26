@@ -2,18 +2,18 @@
 /** @var \frontend\models\Vendor $vendor */
 
 use common\models\User;
-use frontend\models\Client;
 use yii\helpers\Html;
+use yii\helpers\HtmlPurifier;
 
 ?>
 
 <div>
     <div class="container-fluid">
-        E-Mail: <?= $vendor->email ?><br>
-        First Name: <?= $vendor->first_name ?><br>
-        Last Name: <?= $vendor->last_name ?><br>
-        Sphere: <?= $vendor->sphere->title ?><br>
-        Level: <?= $vendor->level ?><br>
+        E-Mail: <?= HtmlPurifier::process($vendor->email) ?><br>
+        First Name: <?= HtmlPurifier::process($vendor->first_name) ?><br>
+        Last Name: <?= HtmlPurifier::process($vendor->last_name) ?><br>
+        Sphere: <?= HtmlPurifier::process($vendor->sphere->title) ?><br>
+        Level: <?= HtmlPurifier::process($vendor->level) ?><br>
     </div>
 
     <?php if (User::isClient()): ?>
