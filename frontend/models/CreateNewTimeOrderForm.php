@@ -3,17 +3,18 @@
 
 namespace frontend\models;
 
-
-use frontend\models\Order;
-use frontend\models\TimeOrder;
 use yii\base\Model;
 
 class CreateNewTimeOrderForm extends Model
 {
+    /** @var string */
     public $startTime;
+    /** @var string */
     public $endTime;
+    /** @var int */
     public $vendorId;
 
+    /** @var string */
     private $fullTime;
 
     /**
@@ -23,22 +24,42 @@ class CreateNewTimeOrderForm extends Model
     {
         return [
             [['startTime', 'endTime', 'vendorId'], 'required'],
+            [['startTime', 'endTime', 'vendorId'], 'datetime'],
             [['startTime', 'endTime'], 'checkTime'],
+            ['vendorId', 'number'],
+            ['vendorId', 'isVendorExist'],
         ];
     }
 
     public function checkTime()
     {
-        if (strtotime($this->endTime) < strtotime($this->startTime) || strtotime($this->endTime) < microtime() || strtotime($this->startTime) < microtime()) {
+        if (strtotime($this->endTime) < strtotime($this->startTime)) {
 
-            return false;
+            $this->addError('startTime', 'Wrong time');
         }
         $this->fullTime = strtotime($this->endTime) - strtotime($this->startTime);
-
-        return true;
     }
 
-    public function createTimeOrder()
+
+    public function notInPast()
+    {
+        if (strtotime($this->endTime) < microtime() || strtotime($this->startTime) < microtime()) {
+            $this->addError('startTime', 'Time cannot be in past');
+        }
+    }
+
+    public function isVendorExist()
+    {
+        $vendor = Vendor::findById($this->vendorId);
+        if ($vendor === null) {
+            $this->addError('vendorId', 'Vendor does not exist');
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function createTimeOrder(): bool
     {
         /** @var Vendor $vendor */
         $vendor = Vendor::findById($this->vendorId);
@@ -49,17 +70,16 @@ class CreateNewTimeOrderForm extends Model
         $order->price = $this->computationPrice($vendor);
         $order->time_start = $this->startTime;
         $order->time_end = $this->endTime;
-        if ($order->save() !== false) {
-
-            return true;
-        }
-
-        return false;
+        return $order->save();
 
     }
 
-    protected function computationPrice(Vendor $vendor)
+    /**
+     * @param Vendor $vendor
+     * @return int
+     */
+    protected function computationPrice(Vendor $vendor): int
     {
-        return $vendor->level * Vendor::MINIMUM_VENDOR_PRICE * 100 / 60 * ($this->fullTime / 60000) / 100;
+        return $vendor->level * Vendor::MINIMUM_VENDOR_PRICE * 100 / 60 * ($this->fullTime / 60000);
     }
 }

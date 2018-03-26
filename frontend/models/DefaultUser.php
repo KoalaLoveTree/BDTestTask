@@ -6,6 +6,7 @@ namespace frontend\models;
 
 use common\models\User;
 use common\models\UserQuery;
+use yii\db\ActiveQuery;
 
 class DefaultUser extends User
 {
@@ -18,12 +19,19 @@ class DefaultUser extends User
         parent::init();
     }
 
-    public static function find()
+    /**
+     * @return UserQuery|\yii\db\ActiveQuery
+     */
+    public static function find(): ActiveQuery
     {
         return new UserQuery(get_called_class(), ['role' => self::ROLE, 'tableName' => self::tableName()]);
     }
 
-    public function beforeSave($insert)
+    /**
+     * @param bool $insert
+     * @return bool
+     */
+    public function beforeSave($insert): bool
     {
         $this->role = self::ROLE;
         return parent::beforeSave($insert);

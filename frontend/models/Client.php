@@ -24,12 +24,19 @@ class Client extends User
         parent::init();
     }
 
-    public static function find()
+    /**
+     * @return UserQuery
+     */
+    public static function find(): UserQuery
     {
         return new UserQuery(get_called_class(), ['role' => self::ROLE, 'tableName' => self::tableName()]);
     }
 
-    public function beforeSave($insert)
+    /**
+     * @param bool $insert
+     * @return bool
+     */
+    public function beforeSave($insert): bool
     {
         $this->role = self::ROLE;
         return parent::beforeSave($insert);

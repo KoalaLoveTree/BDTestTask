@@ -82,9 +82,9 @@ class User extends ActiveRecord implements IdentityInterface
      * Finds user by email
      *
      * @param string $email
-     * @return array|null|ActiveRecord
+     * @return null|ActiveRecord
      */
-    public static function findByEmail(string $email)
+    public static function findByEmail(string $email): ActiveRecord
     {
         return static::find()->andWhere(['email' => $email])->andWhere(['<>', 'status', self::STATUS_DELETED])->one();
     }
@@ -95,38 +95,47 @@ class User extends ActiveRecord implements IdentityInterface
      * @param int $id
      * @return array|null|Vendor
      */
-    public static function findById(int $id)
+    public static function findById(int $id): ?Vendor
     {
         return static::find()->andWhere(['id' => $id])->andWhere(['<>', 'status', self::STATUS_DELETED])->one();
     }
 
-    public static function isClient()
+    /**
+     * @return bool
+     */
+    public static function isClient(): bool
     {
         $client = new Client();
         if ($client->find()->where(['id' => Yii::$app->user->getId()])->one() !== null) {
-//        if ($client->role === Client::ROLE){
             return true;
         }
+
         return false;
     }
 
-    public static function isDefaultUser()
+    /**
+     * @return bool
+     */
+    public static function isDefaultUser(): bool
     {
         $user = new DefaultUser();
         if ($user->find()->where(['id' => Yii::$app->user->getId()])->one() !== null) {
-//        if ($user->role === DefaultUser::ROLE){
             return true;
         }
+
         return false;
     }
 
-    public static function isVendor()
+    /**
+     * @return bool
+     */
+    public static function isVendor(): bool
     {
         $vendor = new Vendor();
         if ($vendor->find()->where(['id' => Yii::$app->user->getId()])->one() !== null) {
-//        if ($vendor->role === Vendor::ROLE){
             return true;
         }
+
         return false;
     }
 
@@ -134,66 +143,29 @@ class User extends ActiveRecord implements IdentityInterface
      * @param int $id
      * @return string
      */
-    protected static function findCurrentUserRole(int $id)
+    protected static function findCurrentUserRole(int $id): string
     {
         return static::findOne(['id' => $id])->role;
     }
 
-    protected static function findCurrentUserStatus(int $id)
+    /**
+     * @param int $id
+     * @return int
+     */
+    protected static function findCurrentUserStatus(int $id): int
     {
         return static::findOne(['id' => $id])->status;
     }
 
-    public static function updateUserRoleClient(string $city, string $state): bool
-    {
-        $user = static::findOne(['id' => Yii::$app->user->getId()]);
-        $user->role = Client::ROLE;
-        if ($user->update() !== false) {
-            $client = Client::findOne(['id' => Yii::$app->user->getId()]);
-            $client->city = $city;
-            $client->state = $state;
-            if ($client->update() !== false) {
-                return true;
-            }
-        }
-        return false;
-
-    }
-
-
-    public static function updateUserRoleVendor(int $sphereId): bool
-    {
-        $user = static::findOne(['id' => Yii::$app->user->getId()]);
-        $user->status = self::STATUS_MODERATED;
-        $user->role = Vendor::ROLE;
-        if ($user->update() !== false) {
-            $vendor = Vendor::findOne(['id' => Yii::$app->user->getId()]);
-            $vendor->sphere_id = $sphereId;
-            if ($vendor->update() !== false) {
-                return true;
-            }
-        }
-        return false;
-
-    }
-
     /**
-     * @return string
+     * @return int
      */
-    public static function userRole()
+    public static function userStatus(): int
     {
         if (Yii::$app->user->isGuest) {
             return 'guest';
         } else {
-            return self::findCurrentUserRole(Yii::$app->user->getId());
-        }
-    }
 
-    public static function userStatus()
-    {
-        if (Yii::$app->user->isGuest) {
-            return 'guest';
-        } else {
             return self::findCurrentUserStatus(Yii::$app->user->getId());
         }
     }
@@ -222,7 +194,7 @@ class User extends ActiveRecord implements IdentityInterface
      * @param string $token password reset token
      * @return bool
      */
-    public static function isPasswordResetTokenValid($token)
+    public static function isPasswordResetTokenValid($token): bool
     {
         if (empty($token)) {
             return false;
@@ -230,6 +202,7 @@ class User extends ActiveRecord implements IdentityInterface
 
         $timestamp = (int)substr($token, strrpos($token, '_') + 1);
         $expire = Yii::$app->params['user.passwordResetTokenExpire'];
+
         return $timestamp + $expire >= time();
     }
 
@@ -263,7 +236,7 @@ class User extends ActiveRecord implements IdentityInterface
      * @param string $password password to validate
      * @return bool if password provided is valid for current user
      */
-    public function validatePassword($password)
+    public function validatePassword($password): bool
     {
         return Yii::$app->security->validatePassword($password, $this->password_hash);
     }

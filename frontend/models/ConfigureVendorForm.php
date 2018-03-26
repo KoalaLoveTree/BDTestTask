@@ -6,6 +6,7 @@ namespace frontend\models;
 
 use common\models\Sphere;
 use common\models\User;
+use Yii;
 use yii\base\Model;
 
 class ConfigureVendorForm extends Model
@@ -14,9 +15,6 @@ class ConfigureVendorForm extends Model
     /** @var int */
     public $sphere;
 
-    /** @var array */
-    private $_spheres;
-    private $_user;
 
     /**
      * {@inheritdoc}
@@ -25,37 +23,38 @@ class ConfigureVendorForm extends Model
     {
         return [
             ['sphere', 'required'],
-//            ['sphere', 'isSphereExist']
+            ['sphere', 'number'],
+            ['sphere', 'isSphereExist']
         ];
     }
 
     public function isSphereExist()
     {
-        /** @var Sphere[] $spheres */
-        $spheres = $this->getAllSpheresId();
-        foreach ($spheres as $sphere) {
-            if ($sphere->id == $this->sphere) {
+        if (Sphere::findOne(['id' => $this->sphere]) === null) {
+            $this->addError('sphere', 'This sphere does not exist');
+        }
+    }
+
+    /**
+     * @return bool
+     * @throws \Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function configureProfileAsVendor(): bool
+    {
+        $user = User::findOne(['id' => Yii::$app->user->getId()]);
+        $user->role = Vendor::ROLE;
+        if ($user->update()) {
+            $newVendor = Vendor::findOne(['id' => Yii::$app->user->getId()]);
+            $newVendor->status = User::STATUS_MODERATED;
+            $newVendor->sphere_id = $this->sphere;
+            if ($newVendor->update() !== false) {
                 return true;
             }
         }
-//        if (in_array(($this->sphere+1),$this->getAllSpheresId())){
-//            return true;
-//        }
+        $this->addError('sphere', 'Something wrong, please try again later');
         return false;
-    }
-
-    protected function getAllSpheresId()
-    {
-        if ($this->_spheres === null) {
-            $this->_spheres = Sphere::findAllSpheresId();
-        }
-
-        return $this->_spheres;
-    }
-
-    public function configureProfileAsVendor()
-    {
-        $this->_user = User::updateUserRoleVendor($this->sphere);
     }
 
 }

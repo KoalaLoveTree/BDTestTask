@@ -4,6 +4,7 @@
 namespace frontend\models;
 
 
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 
@@ -15,9 +16,7 @@ use yii\db\ActiveRecord;
  * @property integer $client_id
  * @property string $type
  * @property int $status
- * @property int $price
  */
-
 class Order extends ActiveRecord
 {
 
@@ -31,12 +30,15 @@ class Order extends ActiveRecord
     /**
      * @return string
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'order';
     }
 
-    public function getService()
+    /**
+     * @return null|\yii\db\ActiveQuery
+     */
+    public function getService(): ?ActiveQuery
     {
         if ($this->type === self::TYPE_SERVICE) {
             return $this->hasOne(Service::className(), ['id' => 'service_id']);
@@ -44,22 +46,41 @@ class Order extends ActiveRecord
         return null;
     }
 
-    public static function confirmOrder(int $id)
+    /**
+     * @param int $id
+     * @return bool
+     * @throws \Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public static function confirmOrder(int $id): bool
     {
         $order = static::findOne(['id' => $id]);
         $order->status = self::STATUS_ACTIVE;
-        if ($order->update()!==false){
+        if ($order->update() !== false) {
             return true;
         }
 
         return false;
     }
 
-    public static function banOrder(int $id)
+    public function getPrice()
+    {
+        return $this->price/100;
+    }
+
+    /**
+     * @param int $id
+     * @return bool
+     * @throws \Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public static function banOrder(int $id): bool
     {
         $order = static::findOne(['id' => $id]);
         $order->status = self::STATUS_DELETED;
-        if ($order->update()!==false){
+        if ($order->update() !== false) {
             return true;
         }
 
@@ -67,9 +88,13 @@ class Order extends ActiveRecord
     }
 
 
-    public static function getOrdersForConfirmByVendor(int $vendorId)
+    /**
+     * @param int $vendorId
+     * @return array|ActiveRecord[]
+     */
+    public static function getOrdersForConfirmByVendor(int $vendorId): array
     {
-        return static::find()->where(['id'=>$vendorId,'status'=>Order::STATUS_MODERATED])->all();
+        return static::find()->where(['id' => $vendorId, 'status' => Order::STATUS_MODERATED])->all();
     }
 
 }

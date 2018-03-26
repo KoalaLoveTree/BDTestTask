@@ -16,7 +16,7 @@ use yii\helpers\Html;
         Level: <?= $vendor->level ?><br>
     </div>
 
-    <?php if (User::userRole() === Client::ROLE): ?>
+    <?php if (User::isClient()): ?>
         <div class="container-fluid">
             <?= Html::a('Make Order Of Time', ['/order/make-new-time-order?vendorId = ' . $vendor->id], ['class' => 'btn btn-block btn-success']) ?>
         </div>

@@ -3,6 +3,8 @@
 namespace common\models;
 
 
+use frontend\models\Order;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 
@@ -37,9 +39,33 @@ class Service extends ActiveRecord
     /**
      * @return string
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'service';
     }
 
+    /**
+     * @return float
+     */
+    public function getPrice(): float
+    {
+        return $this->price / 100;
+    }
+
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrder(): ActiveQuery
+    {
+        return $this->hasMany(Order::className(), ['service_id' => 'id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getVendor(): ActiveQuery
+    {
+        return $this->hasOne(Vendor::className(), ['id' => 'vendor_id']);
+    }
 }

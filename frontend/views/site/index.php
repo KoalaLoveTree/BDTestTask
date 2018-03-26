@@ -8,7 +8,6 @@ use frontend\models\DefaultUser;
 use frontend\models\Vendor;
 use yii\helpers\Html;
 
-$role = User::userRole();
 $this->title = 'Vendors';
 ?>
 <div class="site-index">
@@ -24,7 +23,7 @@ $this->title = 'Vendors';
         </div>
 
     <?php endif; ?>
-    <?php if ($role === DefaultUser::ROLE): ?>
+    <?php if (User::isDefaultUser()): ?>
         <div class="jumbotron">
             <h1>Congratulations!</h1>
 
@@ -34,7 +33,7 @@ $this->title = 'Vendors';
         </div>
     <?php endif; ?>
 
-    <?php if ($role === Vendor::ROLE): ?>
+    <?php if (User::isVendor()): ?>
         <div class="jumbotron">
             <h1>Hello!</h1>
 
@@ -45,7 +44,7 @@ $this->title = 'Vendors';
         </div>
     <?php endif; ?>
 
-    <?php if ($role === Client::ROLE): ?>
+    <?php if (User::isClient()): ?>
         <div class="jumbotron">
             <h1>Hello!</h1>
 

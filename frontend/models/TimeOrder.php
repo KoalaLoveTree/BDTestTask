@@ -9,6 +9,7 @@ namespace frontend\models;
  *
  * @property string $time_start
  * @property string $time_end
+ * @property int $price
  */
 
 class TimeOrder extends Order
@@ -22,12 +23,19 @@ class TimeOrder extends Order
         parent::init();
     }
 
-    public static function find()
+    /**
+     * @return OrderQuery
+     */
+    public static function find(): OrderQuery
     {
         return new OrderQuery(get_called_class(), ['type' => self::TYPE, 'tableName' => self::tableName()]);
     }
 
-    public function beforeSave($insert)
+    /**
+     * @param bool $insert
+     * @return bool
+     */
+    public function beforeSave($insert): bool
     {
         $this->type = self::TYPE;
         return parent::beforeSave($insert);

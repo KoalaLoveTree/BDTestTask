@@ -4,6 +4,7 @@
 namespace common\models;
 
 
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
@@ -20,22 +21,18 @@ class Sphere extends ActiveRecord
         return 'sphere';
     }
 
-    public static function findAllSpheresId()
+    /**
+     * @return array|ActiveRecord[]
+     */
+    public static function findAllSpheres():array
     {
         return static::find()->all();
     }
 
-    public function findSphereByTitle(string $title)
-    {
-        return static::findOne(['title' => $title]);
-    }
-
-    public static function findAllSpheres()
-    {
-        return static::find()->all();
-    }
-
-    public function getVendor()
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getVendor():ActiveQuery
     {
         return $this->hasMany(Vendor::className(), ['sphere_id' => 'id']);
     }

@@ -5,14 +5,16 @@ namespace frontend\models;
 
 
 use common\models\User;
+use Yii;
 use yii\base\Model;
 
 class ConfigureClientForm extends Model
 {
+    /** @var string */
     public $city;
+    /** @var string */
     public $state;
 
-    private $_user;
 
     /**
      * {@inheritdoc}
@@ -21,12 +23,30 @@ class ConfigureClientForm extends Model
     {
         return [
             [['city', 'state'], 'required'],
+            [['city', 'state'], 'string'],
         ];
     }
 
-    public function configureProfileAsClient()
+    /**
+     * @return bool
+     * @throws \Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function configureProfileAsClient(): bool
     {
-        $this->_user = User::updateUserRoleClient($this->city, $this->state);
+        $user = User::findOne(['id' => Yii::$app->user->getId()]);
+        $user->role = Client::ROLE;
+        if ($user->update()) {
+            $newClient = Client::findOne(['id' => Yii::$app->user->getId()]);
+            $newClient->city = $this->city;
+            $newClient->state = $this->state;
+            if($newClient->update()!==false) {
+                return true;
+            }
+        }
+        $this->addError('city', 'Some wrong data');
+        return false;
     }
 
 }

@@ -10,10 +10,15 @@ use common\models\User;
  */
 class SignupForm extends Model
 {
+    /** @var string */
     public $role;
+    /** @var string */
     public $email;
+    /** @var string */
     public $password;
+    /** @var string */
     public $first_name;
+    /** @var string */
     public $last_name;
 
     /**
@@ -31,12 +36,10 @@ class SignupForm extends Model
             ['first_name', 'trim'],
             ['first_name', 'required'],
             ['first_name', 'string', 'max' => 255],
-            ['first_name', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
 
             ['last_name', 'trim'],
             ['last_name', 'required'],
             ['last_name', 'string', 'max' => 255],
-            ['last_name', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
 
             ['password', 'required'],
             ['password', 'string', 'min' => 6],
@@ -49,7 +52,7 @@ class SignupForm extends Model
      * @return User|null the saved model or null if saving fails
      * @throws \yii\base\Exception
      */
-    public function signup()
+    public function signup(): ?User
     {
         if (!$this->validate()) {
             return null;

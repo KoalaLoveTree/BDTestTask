@@ -6,6 +6,7 @@ namespace common\models;
 
 use common\models\User;
 use common\models\UserQuery;
+use yii\db\ActiveQuery;
 
 /**
  * Class Vendor
@@ -21,7 +22,10 @@ class Vendor extends User
 
     const MINIMUM_VENDOR_PRICE = 15;
 
-    public function getSphere()
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSphere():ActiveQuery
     {
         return $this->hasOne(Sphere::className(),['id' => 'sphere_id']);
     }
@@ -32,7 +36,10 @@ class Vendor extends User
         parent::init();
     }
 
-    public static function find()
+    /**
+     * @return \common\models\UserQuery|ActiveQuery
+     */
+    public static function find():ActiveQuery
     {
         return new UserQuery(get_called_class(), ['role' => self::ROLE, 'tableName' => self::tableName()]);
     }
@@ -41,6 +48,14 @@ class Vendor extends User
     {
         $this->role = self::ROLE;
         return parent::beforeSave($insert);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getServices(): ActiveQuery
+    {
+        return $this->hasMany(Service::className(), ['vendor_id' => 'id']);
     }
 
 }

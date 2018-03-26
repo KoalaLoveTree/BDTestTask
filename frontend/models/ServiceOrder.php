@@ -20,12 +20,19 @@ class ServiceOrder extends Order
         parent::init();
     }
 
-    public static function find()
+    /**
+     * @return OrderQuery
+     */
+    public static function find(): OrderQuery
     {
         return new OrderQuery(get_called_class(), ['type' => self::TYPE, 'tableName' => self::tableName()]);
     }
 
-    public function beforeSave($insert)
+    /**
+     * @param bool $insert
+     * @return bool
+     */
+    public function beforeSave($insert): bool
     {
         $this->type = self::TYPE;
         return parent::beforeSave($insert);

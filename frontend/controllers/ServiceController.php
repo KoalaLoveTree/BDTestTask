@@ -19,6 +19,7 @@ class ServiceController extends Controller
     {
         return [];
     }
+
     /**
      * {@inheritdoc}
      */

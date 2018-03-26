@@ -1,13 +1,10 @@
 <?php
 
+/** @var \frontend\controllers\ServiceController $this */
 /** @var \frontend\models\Service $model */
 
-
-/** @var \frontend\controllers\ServiceController $this */
-
 use common\models\User;
-use frontend\models\Client;
-use frontend\models\Vendor;
+use frontend\models\Service;
 use yii\helpers\Html;
 use yii\helpers\HtmlPurifier;
 
@@ -16,17 +13,17 @@ use yii\helpers\HtmlPurifier;
 
     <h2><?= Html::encode($model->title) ?></h2>
     Description: <?= HtmlPurifier::process($model->description) ?><br>
-    Price: <?= HtmlPurifier::process($model->price) ?>$<br>
-    <?php if (User::userRole() === Vendor::ROLE): ?>
-        Status: <?php if ($model->status === \common\models\Service::STATUS_MODERATION): ?>
+    Price: <?= HtmlPurifier::process($model->getPrice()) ?>$<br>
+    <?php if (User::isVendor()): ?>
+        Status: <?php if ($model->status === Service::STATUS_MODERATION): ?>
             Checking
-        <?php elseif ($model->status === \common\models\Service::STATUS_APPROVE): ?>
+        <?php elseif ($model->status === Service::STATUS_APPROVE): ?>
             Approved
-        <?php elseif ($model->status === \common\models\Service::STATUS_DELETED): ?>
+        <?php elseif ($model->status === Service::STATUS_DELETED): ?>
             Ban
         <?php endif;endif; ?>
 </div>
-<?php if (User::userRole() === Client::ROLE): ?>
+<?php if (User::isClient()): ?>
     <a href="/vendor/vendor-page?id =<?= $model->vendor_id ?>">Vendor: <?= HtmlPurifier::process($model->vendor->email) ?>
         <br></a>
     <?= Html::a('Make Order', ['/order/make-new-service-order?serviceId = ' . $model->id], ['class' => 'btn btn-block btn-success']) ?>

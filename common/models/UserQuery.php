@@ -9,7 +9,9 @@ use yii\db\ActiveQuery;
 class UserQuery extends ActiveQuery
 {
 
+    /** @var string */
     public $role;
+    /** @var string */
     public $tableName;
 
     public function prepare($builder)

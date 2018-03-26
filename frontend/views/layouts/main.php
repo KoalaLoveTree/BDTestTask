@@ -5,9 +5,6 @@
 /* @var $content string */
 
 use common\models\User;
-use frontend\models\Client;
-use frontend\models\DefaultUser;
-use frontend\models\Vendor;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
@@ -15,7 +12,6 @@ use yii\widgets\Breadcrumbs;
 use frontend\assets\AppAsset;
 use common\widgets\Alert;
 
-$role = User::userRole();
 AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -51,10 +47,10 @@ AppAsset::register($this);
                 $menuItems[] = ['label' => 'Orders For Confirm', 'url' => ['/order/orders-for-confirm']];
             }
         }
-        if ($role === Client::ROLE) {
+        if (User::isClient()) {
             $menuItems[] = ['label' => 'Services', 'url' => ['/service/exist-services']];
         }
-        if ($role === Vendor::ROLE) {
+        if (User::isVendor()) {
             $menuItems[] = ['label' => 'My Services', 'url' => ['/service/my-services']];
         }
         $menuItems[] = '<li>'

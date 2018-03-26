@@ -9,7 +9,9 @@ use yii\base\Model;
 class CreateNewServiceOrderForm extends Model
 {
 
+    /** @var string */
     public $dateOfOrder;
+    /** @var int */
     public $serviceId;
 
     /**
@@ -27,21 +29,20 @@ class CreateNewServiceOrderForm extends Model
     {
         if (strtotime($this->dateOfOrder) < strtotime(date('d-M-Y'))) {
             $this->addError($attribute, 'U choose past date.');
-            return false;
         }
-
-        return true;
     }
 
     public function isServiceExist()
     {
-        if (Service::find()->where(['id' => $this->serviceId]) !== null) {
-            return true;
+        if (Service::find()->where(['id' => $this->serviceId])->one() === null) {
+            $this->addError('serviceId', 'Service does not exist');
         }
-        return false;
     }
 
-    public function createNewOrder()
+    /**
+     * @return bool
+     */
+    public function createNewOrder(): bool
     {
         $order = new ServiceOrder();
         /** @var Service $service */
@@ -51,9 +52,8 @@ class CreateNewServiceOrderForm extends Model
         $order->service_id = $this->serviceId;
         $order->status = Order::STATUS_MODERATED;
         $order->date = $this->dateOfOrder;
-        $order->price = $service->price;
 
-        return $order->save() ? true : false;
+        return $order->save();
     }
 
 }
