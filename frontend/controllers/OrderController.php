@@ -77,13 +77,13 @@ class OrderController extends Controller
         if (User::isVendor()) {
             return $this->render('orders', [
                 'orders' => new ActiveDataProvider([
-                    'query' => Order::find()->where(['vendor_id' => \Yii::$app->user->getId(), 'status' => Order::STATUS_ACTIVE]),
+                    'query' => Order::find()->where(['vendor_id' => \Yii::$app->user->getId(), 'status' => Order::STATUS_ACTIVE])->with('service'),
                 ]),
             ]);
         } elseif (User::isClient()) {
             return $this->render('orders', [
                 'orders' => new ActiveDataProvider([
-                    'query' => Order::find()->where(['client_id' => \Yii::$app->user->getId(), 'status' => Order::STATUS_ACTIVE]),
+                    'query' => Order::find()->where(['client_id' => \Yii::$app->user->getId(), 'status' => Order::STATUS_ACTIVE])->with('service'),
                 ]),
             ]);
         }
@@ -95,7 +95,7 @@ class OrderController extends Controller
         if (User::isVendor()) {
             return $this->render('orders', [
                 'orders' => new ActiveDataProvider([
-                    'query' => Order::find()->where(['vendor_id' => Yii::$app->user->getId(), 'status' => Order::STATUS_MODERATED]),
+                    'query' => Order::find()->where(['vendor_id' => Yii::$app->user->getId(), 'status' => Order::STATUS_MODERATED])->with('service'),
                 ]),
             ]);
         } elseif (User::isClient()) {

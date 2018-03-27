@@ -74,7 +74,7 @@ class ServiceController extends Controller
         return $this->render('services', [
             'services' => new ActiveDataProvider([
                 'query' => Service::find()->where(['vendor_id' => \Yii::$app->user->getId()])
-                    ->orderBy('title')
+                    ->orderBy('title')->with('vendor')
             ]),
         ]);
     }
@@ -84,7 +84,7 @@ class ServiceController extends Controller
         return $this->render('services', [
             'services' => new ActiveDataProvider([
                 'query' => Service::find()->where(['status' => 10])
-                    ->orderBy('title')
+                    ->orderBy('title')->with('vendor')
             ]),
         ]);
     }
