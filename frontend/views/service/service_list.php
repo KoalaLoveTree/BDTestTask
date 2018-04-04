@@ -15,16 +15,11 @@ use yii\helpers\HtmlPurifier;
     Description: <?= HtmlPurifier::process($model->description) ?><br>
     Price: <?= HtmlPurifier::process($model->getPrice()) ?>$<br>
     <?php if (User::isVendor()): ?>
-        Status: <?php if ($model->status === Service::STATUS_MODERATION): ?>
-            Checking
-        <?php elseif ($model->status === Service::STATUS_APPROVE): ?>
-            Approved
-        <?php elseif ($model->status === Service::STATUS_DELETED): ?>
-            Ban
-        <?php endif;endif; ?>
+        Status: <?= \common\helpers\StatusHelper::getServiceStatusString($model->status) ?><br>
+        <?php endif; ?>
 </div>
 <?php if (User::isClient()): ?>
-    <a href="/vendor/vendor-page?id =<?= $model->vendor_id ?>">Vendor: <?= HtmlPurifier::process($model->vendor->email) ?>
+    <a href="/vendor/vendor-page?id=<?= $model->vendor_id ?>">Vendor: <?= HtmlPurifier::process($model->vendor->email) ?>
         <br></a>
     <?= Html::a('Make Order', ['/order/make-new-service-order?serviceId = ' . $model->id], ['class' => 'btn btn-block btn-success']) ?>
 <?php endif; ?>

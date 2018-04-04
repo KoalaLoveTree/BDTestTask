@@ -42,6 +42,7 @@ AppAsset::register($this);
         $menuItems = [
             ['label' => 'Services', 'url' => ['/service/for-confirm']],
             ['label' => 'Vendors', 'url' => ['/vendor/for-confirm']],
+            ['label' => 'Create Sphere', 'url' => ['/sphere/create-new-sphere']],
         ];
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
@@ -71,8 +72,6 @@ AppAsset::register($this);
 <footer class="footer">
     <div class="container">
         <p class="pull-left">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
-
-        <p class="pull-right"><?= Yii::created() ?></p>
     </div>
 </footer>
 

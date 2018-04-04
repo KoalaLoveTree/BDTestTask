@@ -14,7 +14,7 @@ class Vendor extends \common\models\Vendor
      */
     public static function getVendorsForModeration(): UserQuery
     {
-        return static::find()->where(['status' => self::STATUS_MODERATED])->with('sphere');
+        return static::find()->with('sphere');
     }
 
     /**

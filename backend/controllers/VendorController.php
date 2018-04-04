@@ -61,7 +61,7 @@ class VendorController extends Controller
     public function actionConfirmVendor()
     {
         $model = new ConfirmVendorForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->confirmVendorLevel(Yii::$app->request->get('id_'))) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->confirmVendorLevel(Yii::$app->request->get('id'))) {
             return $this->redirect(['/vendor/for-confirm']);
         }
         return $this->render('addVendorLevel', [
@@ -71,7 +71,7 @@ class VendorController extends Controller
 
     public function actionBanVendor()
     {
-        if (Vendor::banVendor(Yii::$app->request->get('id_'))) {
+        if (Vendor::banVendor(Yii::$app->request->get('id'))) {
             return $this->redirect(['/vendor/for-confirm']);
         }
         return $this->redirect(['/vendor/for-confirm']);

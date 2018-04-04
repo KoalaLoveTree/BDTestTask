@@ -36,6 +36,7 @@ class Admin extends User
         return new UserQuery(get_called_class(), ['role' => self::ROLE, 'tableName' => self::tableName()]);
     }
 
+
     public function beforeSave($insert)
     {
         $this->role = self::ROLE;

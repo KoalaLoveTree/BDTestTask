@@ -59,7 +59,7 @@ class VendorController extends Controller
     public function actionVendorPage()
     {
         return $this->render('vendorPage', [
-            'vendor' => Vendor::findById(\Yii::$app->request->get('id_'))
+            'vendor' => Vendor::findById(\Yii::$app->request->get('id'))
         ]);
     }
 

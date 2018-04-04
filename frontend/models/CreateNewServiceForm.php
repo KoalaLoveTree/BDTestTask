@@ -16,7 +16,6 @@ class CreateNewServiceForm extends Model
     /** @var float */
     public $price;
 
-    private $_user;
 
     /**
      * {@inheritdoc}
@@ -25,8 +24,8 @@ class CreateNewServiceForm extends Model
     {
         return [
             [['title', 'description', 'price'], 'required'],
-            [['title', 'description'], 'string'],
-            ['price', 'number']
+            [['title', 'description'], 'string', 'max' => 127],
+            ['price', 'number', 'min' => 0.1]
 
         ];
     }
@@ -40,20 +39,6 @@ class CreateNewServiceForm extends Model
         $service->price = round($this->price,2)*100;
         $service->status = Service::STATUS_MODERATION;
         return $service->save();
-    }
-
-    /**
-     * Finds user by [[email]]
-     *
-     * @return User
-     */
-    protected function getUser(): User
-    {
-        if ($this->_user === null) {
-            $this->_user = User::findById(\Yii::$app->user->getId());
-        }
-
-        return $this->_user;
     }
 
 }

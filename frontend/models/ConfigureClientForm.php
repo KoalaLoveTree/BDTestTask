@@ -23,7 +23,7 @@ class ConfigureClientForm extends Model
     {
         return [
             [['city', 'state'], 'required'],
-            [['city', 'state'], 'string'],
+            [['city', 'state'], 'string', 'max' => 127],
         ];
     }
 
@@ -36,6 +36,9 @@ class ConfigureClientForm extends Model
     public function configureProfileAsClient(): bool
     {
         $user = User::findOne(['id' => Yii::$app->user->getId()]);
+        if ($user===null){
+            return false;
+        }
         $user->role = Client::ROLE;
         if ($user->update()) {
             $newClient = Client::findOne(['id' => Yii::$app->user->getId()]);

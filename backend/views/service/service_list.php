@@ -16,10 +16,11 @@ use yii\helpers\HtmlPurifier;
     <h2><?= Html::encode($model->title) ?></h2>
     Description: <?= HtmlPurifier::process($model->description) ?><br>
     Price: <?= HtmlPurifier::process($model->getPrice()) ?>$<br>
+    Status: <?= \common\helpers\StatusHelper::getServiceStatusString($model->status) ?><br>
 
 </div>
 <div class="container-fluid">
-    <?= Html::a('Confirm', ['/service/confirm-service/?id = ' . $model->id], ['class' => 'btn btn-block btn-success']) ?>
-    <?= Html::a('Ban', ['/service/ban-service/?id = ' . $model->id], ['class' => 'btn btn-block btn-success']) ?>
+    <?= Html::a('Confirm', ['/service/confirm-service/?id=' . $model->id], ['class' => 'btn btn-block btn-success']) ?>
+    <?= Html::a('Ban', ['/service/ban-service/?id=' . $model->id], ['class' => 'btn btn-block btn-success']) ?>
 </div>
 <br>

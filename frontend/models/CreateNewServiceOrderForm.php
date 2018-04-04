@@ -14,12 +14,16 @@ class CreateNewServiceOrderForm extends Model
     /** @var int */
     public $serviceId;
 
+    /** @var Service */
+    protected $service;
+
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
+            [['dateOfOrder','dateOfOrder'],'require'],
             ['dateOfOrder', 'notInPast'],
             ['serviceId', 'isServiceExist'],
         ];
@@ -27,6 +31,9 @@ class CreateNewServiceOrderForm extends Model
 
     public function notInPast($attribute, $params)
     {
+        if ($this->hasErrors()){
+            return;
+        }
         if (strtotime($this->dateOfOrder) < strtotime(date('d-M-Y'))) {
             $this->addError($attribute, 'U choose past date.');
         }
@@ -34,7 +41,11 @@ class CreateNewServiceOrderForm extends Model
 
     public function isServiceExist()
     {
-        if (Service::find()->where(['id' => $this->serviceId])->one() === null) {
+        if ($this->hasErrors()){
+            return;
+        }
+        $this->service = Service::find()->where(['id' => $this->serviceId])->one();
+        if ($this->service === null) {
             $this->addError('serviceId', 'Service does not exist');
         }
     }
@@ -45,9 +56,7 @@ class CreateNewServiceOrderForm extends Model
     public function createNewOrder(): bool
     {
         $order = new ServiceOrder();
-        /** @var Service $service */
-        $service = Service::find()->where(['id' => $this->serviceId])->one();
-        $order->vendor_id = $service->vendor_id;
+        $order->vendor_id = $this->service->vendor_id;
         $order->client_id = \Yii::$app->user->getId();
         $order->service_id = $this->serviceId;
         $order->status = Order::STATUS_MODERATED;

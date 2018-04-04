@@ -24,8 +24,9 @@ class CreateNewTimeOrderForm extends Model
     {
         return [
             [['startTime', 'endTime', 'vendorId'], 'required'],
-            [['startTime', 'endTime', 'vendorId'], 'datetime'],
+//            [['startTime', 'endTime', 'vendorId'], 'datetime','format'=> 'd-M-Y g:i'],
             [['startTime', 'endTime'], 'checkTime'],
+            [['startTime', 'endTime'], 'notInPast'],
             ['vendorId', 'number'],
             ['vendorId', 'isVendorExist'],
         ];
@@ -33,6 +34,9 @@ class CreateNewTimeOrderForm extends Model
 
     public function checkTime()
     {
+        if ($this->hasErrors()){
+            return;
+        }
         if (strtotime($this->endTime) < strtotime($this->startTime)) {
 
             $this->addError('startTime', 'Wrong time');
@@ -43,6 +47,9 @@ class CreateNewTimeOrderForm extends Model
 
     public function notInPast()
     {
+        if ($this->hasErrors()){
+            return;
+        }
         if (strtotime($this->endTime) < microtime() || strtotime($this->startTime) < microtime()) {
             $this->addError('startTime', 'Time cannot be in past');
         }
@@ -50,6 +57,9 @@ class CreateNewTimeOrderForm extends Model
 
     public function isVendorExist()
     {
+        if ($this->hasErrors()){
+            return;
+        }
         $vendor = Vendor::findById($this->vendorId);
         if ($vendor === null) {
             $this->addError('vendorId', 'Vendor does not exist');

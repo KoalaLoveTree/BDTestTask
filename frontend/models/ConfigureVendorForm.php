@@ -30,6 +30,9 @@ class ConfigureVendorForm extends Model
 
     public function isSphereExist()
     {
+        if ($this->hasErrors()){
+            return;
+        }
         if (Sphere::findOne(['id' => $this->sphere]) === null) {
             $this->addError('sphere', 'This sphere does not exist');
         }
@@ -47,7 +50,7 @@ class ConfigureVendorForm extends Model
         $user->role = Vendor::ROLE;
         if ($user->update()) {
             $newVendor = Vendor::findOne(['id' => Yii::$app->user->getId()]);
-            $newVendor->status = User::STATUS_MODERATED;
+            $newVendor->status = User::STATUS_MODERATION;
             $newVendor->sphere_id = $this->sphere;
             if ($newVendor->update() !== false) {
                 return true;

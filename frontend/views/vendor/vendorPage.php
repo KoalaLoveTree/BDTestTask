@@ -18,7 +18,7 @@ use yii\helpers\HtmlPurifier;
 
     <?php if (User::isClient()): ?>
         <div class="container-fluid">
-            <?= Html::a('Make Order Of Time', ['/order/make-new-time-order?vendorId = ' . $vendor->id], ['class' => 'btn btn-block btn-success']) ?>
+            <?= Html::a('Make Order Of Time', ['/order/make-new-time-order?vendorId=' . $vendor->id], ['class' => 'btn btn-block btn-success']) ?>
         </div>
     <?php endif; ?>
 </div>

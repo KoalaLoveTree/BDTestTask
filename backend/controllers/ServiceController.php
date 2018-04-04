@@ -60,7 +60,7 @@ class ServiceController extends Controller
 
     public function actionConfirmService()
     {
-        if (Service::confirmService(Yii::$app->request->get('id_'))) {
+        if (Service::confirmService(Yii::$app->request->get('id'))) {
             $this->redirect(['/service/for-confirm']);
         }
         return $this->redirect(['/service/for-confirm']);
@@ -68,7 +68,7 @@ class ServiceController extends Controller
 
     public function actionBanService()
     {
-        if (Service::banService(Yii::$app->request->get('id_'))) {
+        if (Service::banService(Yii::$app->request->get('id'))) {
             $this->redirect(['/service/for-confirm']);
         }
         return $this->redirect(['/service/for-confirm']);

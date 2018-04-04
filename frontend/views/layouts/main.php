@@ -41,7 +41,7 @@ AppAsset::register($this);
         $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
-        if (!User::isDefaultUser()) {
+        if (!User::isDefaultUser()&&!User::isAdmin()) {
             $menuItems[] = ['label' => 'My Orders', 'url' => ['/order/my-orders']];
             if (User::isVendor()) {
                 $menuItems[] = ['label' => 'Orders For Confirm', 'url' => ['/order/orders-for-confirm']];
@@ -81,8 +81,6 @@ AppAsset::register($this);
 <footer class="footer">
     <div class="container">
         <p class="pull-left">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
-
-        <p class="pull-right"><?= Yii::created() ?></p>
     </div>
 </footer>
 

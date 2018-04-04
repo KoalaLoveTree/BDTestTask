@@ -40,22 +40,26 @@ class Order extends ActiveRecord
      */
     public function getService(): ?ActiveQuery
     {
-        if ($this->type === self::TYPE_SERVICE) {
             return $this->hasOne(Service::className(), ['id' => 'service_id']);
-        }
-        return null;
     }
 
     /**
      * @param int $id
+     * @param int $vendorId
      * @return bool
      * @throws \Exception
      * @throws \Throwable
      * @throws \yii\db\StaleObjectException
      */
-    public static function confirmOrder(int $id): bool
+    public static function confirmOrder(int $id,int $vendorId): bool
     {
-        $order = static::findOne(['id' => $id]);
+        $order = static::findOne([
+            'id' => $id,
+            'vendor_id' => $vendorId,
+        ]);
+        if ($order===null){
+            return false;
+        }
         $order->status = self::STATUS_ACTIVE;
         if ($order->update() !== false) {
             return true;
@@ -71,14 +75,21 @@ class Order extends ActiveRecord
 
     /**
      * @param int $id
+     * @param int $vendorId
      * @return bool
      * @throws \Exception
      * @throws \Throwable
      * @throws \yii\db\StaleObjectException
      */
-    public static function banOrder(int $id): bool
+    public static function banOrder(int $id,int $vendorId): bool
     {
-        $order = static::findOne(['id' => $id]);
+        $order = static::findOne([
+            'id' => $id,
+            'vendor_id' => $vendorId,
+        ]);
+        if ($order===null){
+            return false;
+        }
         $order->status = self::STATUS_DELETED;
         if ($order->update() !== false) {
             return true;
@@ -86,7 +97,6 @@ class Order extends ActiveRecord
 
         return false;
     }
-
 
     /**
      * @param int $vendorId

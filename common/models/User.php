@@ -2,6 +2,8 @@
 
 namespace common\models;
 
+use backend\models\Admin;
+use common\interfaces\StatusInterface;
 use frontend\models\Client;
 use frontend\models\DefaultUser;
 use Yii;
@@ -26,12 +28,8 @@ use yii\web\IdentityInterface;
  * @property integer $created_at
  * @property integer $updated_at
  */
-class User extends ActiveRecord implements IdentityInterface
+class User extends ActiveRecord implements IdentityInterface, StatusInterface
 {
-    const STATUS_DELETED = 0;
-    const STATUS_MODERATED = 5;
-    const STATUS_ACTIVE = 10;
-
 
     /**
      * {@inheritdoc}
@@ -57,8 +55,8 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED, self::STATUS_MODERATED]],
+            ['status', 'default', 'value' => self::STATUS_APPROVE],
+            ['status', 'in', 'range' => [self::STATUS_APPROVE, self::STATUS_DELETED, self::STATUS_MODERATION]],
         ];
     }
 
@@ -107,6 +105,18 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $client = new Client();
         if ($client->find()->where(['id' => Yii::$app->user->getId()])->one() !== null) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isAdmin():bool{
+        $admin = new Admin();
+        if ($admin->find()->where(['id' => Yii::$app->user->getId()])->one() !== null) {
             return true;
         }
 
@@ -184,7 +194,7 @@ class User extends ActiveRecord implements IdentityInterface
 
         return static::findOne([
             'password_reset_token' => $token,
-            'status' => self::STATUS_ACTIVE,
+            'status' => self::STATUS_APPROVE,
         ]);
     }
 

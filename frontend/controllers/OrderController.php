@@ -112,7 +112,7 @@ class OrderController extends Controller
         }
         return $this->render('createNewServiceOrder', [
             'model' => $model,
-            'service' => Service::find()->where(['id' => Yii::$app->request->get('serviceId_')])->one(),
+            'service' => Service::find()->where(['id' => Yii::$app->request->get('serviceId')])->one(),
         ]);
     }
 
@@ -124,13 +124,13 @@ class OrderController extends Controller
         }
         return $this->render('createNewTimeOrder', [
             'model' => $model,
-            'vendorId' => Yii::$app->request->get('vendorId_'),
+            'vendorId' => Yii::$app->request->get('vendorId'),
         ]);
     }
 
     public function actionConfirmOrder()
     {
-        if (Order::confirmOrder(Yii::$app->request->get('id_'))) {
+        if (Order::confirmOrder(Yii::$app->request->get('id'), Yii::$app->user->getId())) {
             $this->redirect(['/order/orders-for-confirm']);
         }
         return $this->redirect(['/order/orders-for-confirm']);
@@ -138,7 +138,7 @@ class OrderController extends Controller
 
     public function actionBanOrder()
     {
-        if (Order::banOrder(Yii::$app->request->get('id_'))) {
+        if (Order::banOrder(Yii::$app->request->get('id'))) {
             $this->redirect(['/order/orders-for-confirm']);
         }
         return $this->redirect(['/order/orders-for-confirm']);

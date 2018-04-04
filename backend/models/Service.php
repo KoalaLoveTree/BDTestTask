@@ -8,7 +8,7 @@ class Service extends \common\models\Service
 {
     public static function getServicesForModeration()
     {
-        return static::find()->where(['status' => self::STATUS_MODERATION]);
+        return static::find();
     }
 
     /**

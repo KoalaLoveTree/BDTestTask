@@ -3,6 +3,7 @@
 namespace common\models;
 
 
+use common\interfaces\StatusInterface;
 use frontend\models\Order;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -19,12 +20,8 @@ use yii\db\ActiveRecord;
  * @property integer $status
  *
  */
-class Service extends ActiveRecord
+class Service extends ActiveRecord implements StatusInterface
 {
-
-    const STATUS_DELETED = 0;
-    const STATUS_MODERATION = 5;
-    const STATUS_APPROVE = 10;
 
     /**
      * {@inheritdoc}

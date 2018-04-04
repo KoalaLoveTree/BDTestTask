@@ -16,7 +16,7 @@ use yii\helpers\Html;
         'itemView' => 'service_list'
     ]) ?>
 
-    <?php if (User::isVendor() && User::userStatus() === User::STATUS_ACTIVE): ?>
+    <?php if (User::isVendor() && User::userStatus() === User::STATUS_APPROVE): ?>
         <div class="container-fluid">
             <?= Html::a('Create New Service', ['/service/create-new-service'], ['class' => 'btn btn-block btn-success']) ?>
         </div>

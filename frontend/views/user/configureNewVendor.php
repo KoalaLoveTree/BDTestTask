@@ -8,7 +8,7 @@ use yii\helpers\Html;
 ?>
 <div class="row">
     <div class="container-fluid">
-        <?php $form = ActiveForm::begin(['id' => 'configure-vendor-form']); ?>
+        <?php $form = ActiveForm::begin(['id' => 'configure-vendor-form', 'method' => 'put']); ?>
 
         <?= $form->field($model, 'sphere')->dropDownList($spheres) ?>
 

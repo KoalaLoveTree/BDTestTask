@@ -33,13 +33,14 @@ class ConfirmVendorForm extends Model
     public function confirmVendorLevel(int $id): bool
     {
         $vendor = Vendor::findOne(['id' => $id]);
-        $vendor->level = $this->level;
-        $vendor->status = Vendor::STATUS_ACTIVE;
-        if ($vendor->update() !== false) {
-            return true;
+        if ($vendor===null){
+            return false;
         }
+        $vendor->level = $this->level;
+        $vendor->status = Vendor::STATUS_APPROVE;
+        return (bool)$vendor->update();
 
-        return false;
+
     }
 
 }

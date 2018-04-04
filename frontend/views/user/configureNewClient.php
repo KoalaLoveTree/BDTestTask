@@ -8,7 +8,7 @@ use yii\helpers\Html;
 ?>
 <div class="row">
     <div class="container-fluid">
-        <?php $form = ActiveForm::begin(['id' => 'configure-client-form']); ?>
+        <?php $form = ActiveForm::begin(['id' => 'configure-client-form','method' => 'put']); ?>
 
         <?= $form->field($model, 'city')->textInput(['autofocus' => true]) ?>
         <?= $form->field($model, 'state')->textInput() ?>
